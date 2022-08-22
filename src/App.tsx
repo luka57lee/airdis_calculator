@@ -1,20 +1,13 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { red } from '@mui/material/colors'
 import './App.css'
-import Calculator from './pages/calculator'
+import Calculator from './pages/Calculator'
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: red[500],
-    },
-  },
-})
+const defaultTheme = createTheme() // or your custom theme
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <Calculator />
     </ThemeProvider>
