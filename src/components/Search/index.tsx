@@ -56,6 +56,9 @@ const Search = ({
         value={value}
         onChange={(event: any, newValue: Airport | null) => {
           setValue(newValue)
+          if (newValue) {
+            onSelect(newValue)
+          }
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
