@@ -28,11 +28,13 @@ export function getDistanceInNauticalMiles(
   origin: Airport,
   destination: Airport,
 ): number {
-  return getDistanceFromLatLonInKm(
-    origin.lat,
-    origin.lng,
-    destination.lat,
-    destination.lng,
+  return (
+    getDistanceFromLatLonInKm(
+      origin.lat,
+      origin.lng,
+      destination.lat,
+      destination.lng,
+    ) / 1.852
   )
 }
 
@@ -58,30 +60,37 @@ export function getZoomLevelOnGoogleMap(
   return i
 }
 
-export function getMeanPoint(points: Point[]): Point {
-  let latXTotal = 0
-  let latYTotal = 0
-  let lonDegreesTotal = 0
-
-  let currentLatLong
-  for (let i = 0; (currentLatLong = points[i]); i++) {
-    const latDegrees = currentLatLong.lat
-    const lonDegrees = currentLatLong.lng
-
-    const latRadians = (Math.PI * latDegrees) / 180
-    latXTotal += Math.cos(latRadians)
-    latYTotal += Math.sin(latRadians)
-
-    lonDegreesTotal += lonDegrees
+function getMeanPoint(coords: Point[]): Point {
+  if (coords.length === 1) {
+    return coords[0]
   }
 
-  const finalLatRadians = Math.atan2(latYTotal, latXTotal)
-  const finalLatDegrees = (finalLatRadians * 180) / Math.PI
+  let x = 0.0
+  let y = 0.0
+  let z = 0.0
 
-  const finalLonDegrees = lonDegreesTotal / points.length
+  for (const coord of coords) {
+    const latitude = (coord.lat * Math.PI) / 180
+    const longitude = (coord.lng * Math.PI) / 180
+
+    x += Math.cos(latitude) * Math.cos(longitude)
+    y += Math.cos(latitude) * Math.sin(longitude)
+    z += Math.sin(latitude)
+  }
+
+  const total = coords.length
+
+  x = x / total
+  y = y / total
+  z = z / total
+
+  const centralLongitude = Math.atan2(y, x)
+  const centralSquareRoot = Math.sqrt(x * x + y * y)
+  const centralLatitude = Math.atan2(z, centralSquareRoot)
+
   return {
-    lat: finalLatDegrees,
-    lng: finalLonDegrees,
+    lat: (centralLatitude * 180) / Math.PI,
+    lng: (centralLongitude * 180) / Math.PI,
   }
 }
 

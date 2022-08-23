@@ -125,23 +125,25 @@ const Search = ({
         options={options}
         getOptionLabel={(option) => `${option.name}`}
         sx={{ width: matches ? 300 : '100%' }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Input airport name or 3 digit code"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
-        )}
+        renderInput={(params) => {
+          return (
+            <TextField
+              {...params}
+              label="Input airport name or 3 digit code"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )
+        }}
       />
       <Snackbar
         open={showError}
