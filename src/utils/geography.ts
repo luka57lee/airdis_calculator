@@ -44,10 +44,10 @@ export function getZoomLevelOnGoogleMap(
   const zoomLevelInEarth =
     (Math.PI * R) /
     getDistanceFromLatLonInKm(
-      Number(origin.lat),
-      Number(origin.lng),
-      Number(destination.lat),
-      Number(destination.lng),
+      origin.lat,
+      origin.lng,
+      destination.lat,
+      destination.lng,
     )
   let zoom = 1,
     i = 0
