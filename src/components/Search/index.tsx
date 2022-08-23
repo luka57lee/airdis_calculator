@@ -1,7 +1,12 @@
 import { forwardRef, useEffect, useState } from 'react'
 import FormLabel from '@mui/material/FormLabel'
 import FormGroup from '@mui/material/FormGroup'
-import { Airport, AirportCodeAPIResponse, APIAirport } from '../../types'
+import {
+  Airport,
+  AirportCodeAPIResponse,
+  APIAirport,
+  AirportReactState,
+} from '../../types'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { styled } from '@mui/material/styles'
@@ -35,7 +40,7 @@ const Search = ({
   onSelect,
 }: {
   title: string
-  onSelect: (ap: Airport) => void
+  onSelect: (ap: AirportReactState) => void
 }) => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
@@ -61,8 +66,8 @@ const Search = ({
 
   useEffect(() => {
     if (debouncedValue) {
-      getAirports(debouncedValue).then(
-        (res: AxiosResponse<AirportCodeAPIResponse>) => {
+      getAirports(debouncedValue)
+        .then((res: AxiosResponse<AirportCodeAPIResponse>) => {
           if (res.data.status === true && res.data.airports) {
             const newOptions: Airport[] = res.data.airports.map(
               (airport: APIAirport): Airport => ({
@@ -83,8 +88,12 @@ const Search = ({
               setErrorMessage(`Couldn't find airports`)
             }
           }
-        },
-      )
+        })
+        .catch(() => {
+          setOptions([])
+          setShowError(true)
+          setErrorMessage(`Couldn't find airports`)
+        })
     }
   }, [debouncedValue])
 
@@ -93,11 +102,9 @@ const Search = ({
       <FormLabel sx={{ width: 110 }}>{title}</FormLabel>
       <Autocomplete
         value={value}
-        onChange={(event: any, newValue: Airport | null) => {
+        onChange={(event: any, newValue: AirportReactState) => {
           setValue(newValue)
-          if (newValue) {
-            onSelect(newValue)
-          }
+          onSelect(newValue)
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {

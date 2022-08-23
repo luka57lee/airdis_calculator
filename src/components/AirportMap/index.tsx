@@ -1,4 +1,4 @@
-import { Airport } from '../../types'
+import { AirportReactState } from '../../types'
 import { GoogleMap } from '@react-google-maps/api'
 import { useEffect, useState, useCallback } from 'react'
 import { getZoomLevelOnGoogleMap, getCenter } from '../../utils/geography'
@@ -21,8 +21,8 @@ const AirportMap = ({
   origin,
   destination,
 }: {
-  origin: Airport | undefined
-  destination: Airport | undefined
+  origin: AirportReactState
+  destination: AirportReactState
 }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null)
 
@@ -46,6 +46,8 @@ const AirportMap = ({
   }, [map, origin, destination])
 
   useEffect(() => {
+    console.log('origin===>', origin)
+    originMarker?.setMap(null)
     if (map && origin) {
       originMarker?.setMap(null)
       originMarker = new google.maps.Marker({
@@ -59,6 +61,7 @@ const AirportMap = ({
   }, [origin, map])
 
   useEffect(() => {
+    destinationMarker?.setMap(null)
     if (map && destination) {
       destinationMarker?.setMap(null)
       destinationMarker = new google.maps.Marker({

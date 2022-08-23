@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Container } from '@mui/material'
 import Box from '@mui/material/Box'
-import { Airport } from '../../types'
+import { Airport, AirportReactState } from '../../types'
 import Button from '@mui/material/Button'
 import Search from '../../components/Search'
 import { getDistanceInNauticalMiles } from '../../utils/geography'
@@ -10,8 +10,8 @@ import { useJsApiLoader } from '@react-google-maps/api'
 import Header from '../../components/Header'
 
 const Calculator = () => {
-  const [origin, setOrigin] = useState<Airport | undefined>()
-  const [destination, setDestination] = useState<Airport | undefined>()
+  const [origin, setOrigin] = useState<AirportReactState>(null)
+  const [destination, setDestination] = useState<AirportReactState>(null)
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -20,11 +20,12 @@ const Calculator = () => {
 
   const [distance, setDistance] = useState<number>(0)
 
-  const handleOrigin = (ap: Airport) => {
+  const handleOrigin = (ap: AirportReactState) => {
+    console.log('selected origin', ap)
     setOrigin(ap)
   }
 
-  const handleDestination = (ap: Airport) => {
+  const handleDestination = (ap: AirportReactState) => {
     setDestination(ap)
   }
 

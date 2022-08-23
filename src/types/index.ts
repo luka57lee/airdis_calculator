@@ -25,6 +25,8 @@ export type Airport = Point & {
   idata: string
 }
 
+export type AirportReactState = Airport | null
+
 export type AirportCodeAPIResponse = {
   airports?: APIAirport[]
   message: string
