@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Typography, Container } from '@mui/material'
 import Box from '@mui/material/Box'
-import { Airport, AirportSearch } from '../../types'
+import { Airport } from '../../types'
 import Button from '@mui/material/Button'
 import Search from '../../components/Search'
 import { styled } from '@mui/material/styles'
@@ -12,7 +12,6 @@ import {
 } from '../../utils/geography'
 // import GoogleMap from '@google/maps'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
-import { usePrevious } from '../../hooks/previousHook'
 
 const HeaderDesc = styled('div')(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -58,15 +57,15 @@ const Calculator = () => {
 
   const selectAirPort = (key: string) => (ap: Airport) => {
     if (map && origin === undefined && destination === undefined) {
-      map.setCenter({ lat: Number(ap.latitude), lng: Number(ap.longitude) })
+      map.setCenter({ lat: ap.lat, lng: ap.lng })
     }
     if (key === 'origin') {
       if (isLoaded && map) {
         originMarker?.setMap(null)
         const om = new google.maps.Marker({
           position: {
-            lat: Number(ap.latitude),
-            lng: Number(ap.longitude),
+            lat: ap.lat,
+            lng: ap.lng,
           },
           map,
         })
@@ -77,8 +76,8 @@ const Calculator = () => {
       destinationMarker?.setMap(null)
       const dm = new google.maps.Marker({
         position: {
-          lat: Number(ap.latitude),
-          lng: Number(ap.longitude),
+          lat: ap.lat,
+          lng: ap.lng,
         },
         map,
       })
@@ -102,12 +101,12 @@ const Calculator = () => {
       if (origin && destination) {
         const flightPlanCoordinates = [
           {
-            lat: Number(origin.latitude),
-            lng: Number(origin.longitude),
+            lat: origin.lat,
+            lng: origin.lng,
           },
           {
-            lat: Number(destination.latitude),
-            lng: Number(destination.longitude),
+            lat: destination.lat,
+            lng: destination.lng,
           },
         ]
         const fp = new window.google.maps.Polyline({

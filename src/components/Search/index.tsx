@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 import FormLabel from '@mui/material/FormLabel'
 import FormGroup from '@mui/material/FormGroup'
-import { Airport, AirportCodeAPIResponse } from '../../types'
+import { Airport, AirportCodeAPIResponse, APIAirport } from '../../types'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { styled } from '@mui/material/styles'
@@ -72,7 +72,15 @@ const Search = ({
       getAirports(debouncedValue, Number(limit)).then(
         (res: AxiosResponse<AirportCodeAPIResponse>) => {
           if (res.data.status === true && res.data.airports) {
-            setOptions(res.data.airports)
+            const newOptions: Airport[] = res.data.airports.map(
+              (airport: APIAirport): Airport => ({
+                lat: Number(airport.latitude),
+                lng: Number(airport.longitude),
+                name: airport.name,
+                idata: airport.idata,
+              }),
+            )
+            setOptions(newOptions)
           } else {
             setOptions([])
             if (res.data.status === false && res.data.message) {
