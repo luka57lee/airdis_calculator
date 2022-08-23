@@ -6,11 +6,9 @@ const APC_AUTH_SECRET = process.env.REACT_APP_APC_AUTH_SECRET
 
 export const getAirports = (
   search: string,
-  limit: number,
 ): Promise<AxiosResponse<AirportCodeAPIResponse>> => {
   const formData = new FormData()
   formData.append('term', search)
-  formData.append('limit', limit.toString())
 
   return axios.post(airportCodesAPI, formData, {
     method: 'post',

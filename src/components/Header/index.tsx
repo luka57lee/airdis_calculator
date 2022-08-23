@@ -7,6 +7,10 @@ const HeaderTitle = styled('span')(({ theme }) => ({
     fontSize: '21px',
     lineHeight: '50px',
   },
+  [theme.breakpoints.down(320)]: {
+    fontSize: '14px',
+    lineHeight: '50px',
+  },
 }))
 const HeaderDesc = styled('div')(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {

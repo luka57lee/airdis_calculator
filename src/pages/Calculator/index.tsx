@@ -7,6 +7,7 @@ import Search from '../../components/Search'
 import { getDistanceInNauticalMiles } from '../../utils/geography'
 import AirportMap from '../../components/AirportMap'
 import { useJsApiLoader } from '@react-google-maps/api'
+import Header from '../../components/Header'
 
 const Calculator = () => {
   const [origin, setOrigin] = useState<Airport | undefined>()
@@ -42,6 +43,7 @@ const Calculator = () => {
         width: '100%',
       }}
     >
+      <Header />
       <Container maxWidth="xl" sx={{ margin: '24px auto' }}>
         <Box sx={{ margin: '16px' }}>
           <Search title="Origin" onSelect={handleOrigin} />

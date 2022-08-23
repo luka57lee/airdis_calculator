@@ -23,13 +23,6 @@ const CustomFormGroup = styled(FormGroup)(({ theme }) => ({
   },
 }))
 
-const CustomTextField = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    width: '120px',
-  },
-}))
-
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -51,7 +44,6 @@ const Search = ({
   const [inputValue, setInputValue] = useState<string>('')
   const [searchValue, setSearchValue] = useState<string>('')
   const [options, setOptions] = useState<Array<Airport>>([])
-  const [limit, setLimit] = useState<string>('20')
   const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
@@ -69,7 +61,7 @@ const Search = ({
 
   useEffect(() => {
     if (debouncedValue) {
-      getAirports(debouncedValue, Number(limit)).then(
+      getAirports(debouncedValue).then(
         (res: AxiosResponse<AirportCodeAPIResponse>) => {
           if (res.data.status === true && res.data.airports) {
             const newOptions: Airport[] = res.data.airports.map(
@@ -94,7 +86,7 @@ const Search = ({
         },
       )
     }
-  }, [debouncedValue, limit])
+  }, [debouncedValue])
 
   return (
     <CustomFormGroup>
@@ -120,13 +112,6 @@ const Search = ({
         renderInput={(params) => (
           <TextField {...params} label="Input airport name or 3 digit code" />
         )}
-      />
-      <CustomTextField
-        label="Max suggestion"
-        type="number"
-        value={limit}
-        onChange={(event) => setLimit(event.target.value)}
-        variant="outlined"
       />
       <Snackbar
         open={showError}
