@@ -21,7 +21,6 @@ const Calculator = () => {
   const [distance, setDistance] = useState<number>(0)
 
   const handleOrigin = (ap: AirportReactState) => {
-    console.log('selected origin', ap)
     setOrigin(ap)
   }
 
@@ -53,7 +52,7 @@ const Calculator = () => {
             variant="contained"
             sx={{ marginLeft: '16px' }}
             onClick={calculate}
-            disabled={origin === undefined || destination === undefined}
+            disabled={!origin || !destination}
           >
             Calcuate
           </Button>
@@ -65,11 +64,7 @@ const Calculator = () => {
             margin: '16px',
           }}
         >
-          {distance === 0 ||
-          origin === undefined ||
-          destination === undefined ? (
-            <></>
-          ) : (
+          {distance === 0 || !origin || !destination ? null : (
             <>
               Distance between <b>{origin?.name}</b> and &nbsp;
               <b>{destination?.name}</b> is <b>{distance.toFixed(3)}</b> &nbsp;

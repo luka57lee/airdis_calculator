@@ -14,6 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import { useDebounce } from '../../hooks/debounceHook'
 import { getAirports } from '../../services'
@@ -51,6 +52,7 @@ const Search = ({
   const [options, setOptions] = useState<Array<Airport>>([])
   const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const debouncedValue = useDebounce(searchValue, 500)
 
@@ -66,8 +68,10 @@ const Search = ({
 
   useEffect(() => {
     if (debouncedValue) {
+      setLoading(true)
       getAirports(debouncedValue)
         .then((res: AxiosResponse<AirportCodeAPIResponse>) => {
+          setLoading(false)
           if (res.data.status === true && res.data.airports) {
             const newOptions: Airport[] = res.data.airports.map(
               (airport: APIAirport): Airport => ({
@@ -90,10 +94,13 @@ const Search = ({
           }
         })
         .catch(() => {
+          setLoading(false)
           setOptions([])
           setShowError(true)
           setErrorMessage(`Couldn't find airports`)
         })
+    } else {
+      setOptions([])
     }
   }, [debouncedValue])
 
@@ -106,6 +113,8 @@ const Search = ({
           setValue(newValue)
           onSelect(newValue)
         }}
+        loading={loading}
+        filterOptions={(x) => x}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue)
@@ -117,7 +126,21 @@ const Search = ({
         getOptionLabel={(option) => `${option.name}`}
         sx={{ width: matches ? 300 : '100%' }}
         renderInput={(params) => (
-          <TextField {...params} label="Input airport name or 3 digit code" />
+          <TextField
+            {...params}
+            label="Input airport name or 3 digit code"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
         )}
       />
       <Snackbar

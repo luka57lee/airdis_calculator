@@ -46,7 +46,6 @@ const AirportMap = ({
   }, [map, origin, destination])
 
   useEffect(() => {
-    console.log('origin===>', origin)
     originMarker?.setMap(null)
     if (map && origin) {
       originMarker?.setMap(null)
