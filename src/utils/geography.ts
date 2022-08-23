@@ -36,9 +36,12 @@ export function getDistanceInNauticalMiles(
   )
 }
 
-export function getZoom(origin: Airport, destination: Airport): number {
+export function getZoomLevelOnGoogleMap(
+  origin: Airport,
+  destination: Airport,
+): number {
   const R = 6371 // Radius of the earth in km
-  return (
+  const zoomLevelInEarth =
     (Math.PI * R) /
     getDistanceFromLatLonInKm(
       Number(origin.lat),
@@ -46,7 +49,13 @@ export function getZoom(origin: Airport, destination: Airport): number {
       Number(destination.lat),
       Number(destination.lng),
     )
-  )
+  let zoom = 1,
+    i = 0
+  while (zoom < zoomLevelInEarth) {
+    zoom *= 2
+    i++
+  }
+  return i
 }
 
 export function getMeanPoint(points: Point[]): Point {

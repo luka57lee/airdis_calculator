@@ -7,7 +7,7 @@ import Search from '../../components/Search'
 import { styled } from '@mui/material/styles'
 import {
   getDistanceInNauticalMiles,
-  getZoom,
+  getZoomLevelOnGoogleMap,
   getCenter,
 } from '../../utils/geography'
 // import GoogleMap from '@google/maps'
@@ -24,7 +24,7 @@ const containerStyle = {
   height: '400px',
 }
 
-const center = {
+const defaultCenter = {
   lat: -3.745,
   lng: -38.523,
 }
@@ -118,9 +118,10 @@ const Calculator = () => {
         })
         setFlightPath(fp)
         fp.setMap(map)
-
-        map.setCenter(getCenter(origin, destination))
-        map.setZoom(getZoom(origin, destination))
+        const center = getCenter(origin, destination)
+        map.setCenter(center)
+        const zoom = getZoomLevelOnGoogleMap(origin, destination)
+        map.setZoom(zoom)
       }
     }
 
@@ -186,7 +187,7 @@ const Calculator = () => {
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={containerStyle}
-              center={center}
+              center={defaultCenter}
               zoom={1}
               onLoad={onLoad}
               onUnmount={onUnmount}
