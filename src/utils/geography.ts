@@ -35,3 +35,26 @@ export function getDistanceInNauticalMiles(
     Number(destination.longitude),
   )
 }
+
+export function getZoom(origin: Airport, destination: Airport): number {
+  const R = 6371 // Radius of the earth in km
+  return (
+    (Math.PI * R) /
+    getDistanceFromLatLonInKm(
+      Number(origin.latitude),
+      Number(origin.longitude),
+      Number(destination.latitude),
+      Number(destination.longitude),
+    )
+  )
+}
+
+export function getCenter(
+  origin: Airport,
+  destination: Airport,
+): { lat: number; lng: number } {
+  return {
+    lat: (Number(origin.latitude) + Number(destination.latitude)) / 2,
+    lng: (Number(origin.longitude) + Number(destination.longitude)) / 2,
+  }
+}

@@ -1,14 +1,18 @@
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import FormLabel from '@mui/material/FormLabel'
 import FormGroup from '@mui/material/FormGroup'
-import { Airport } from '../../types'
+import { Airport, AirportCodeAPIResponse } from '../../types'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { styled } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+
 import { useDebounce } from '../../hooks/debounceHook'
 import { getAirports } from '../../services'
+import { AxiosResponse } from 'axios'
 
 const CustomFormGroup = styled(FormGroup)(({ theme }) => ({
   gap: '16px',
@@ -26,6 +30,13 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }))
 
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+})
+
 const Search = ({
   title,
   onSelect,
@@ -37,17 +48,45 @@ const Search = ({
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
 
   const [value, setValue] = useState<Airport | null>()
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState<string>('')
+  const [searchValue, setSearchValue] = useState<string>('')
   const [options, setOptions] = useState<Array<Airport>>([])
+  const [limit, setLimit] = useState<string>('20')
+  const [showError, setShowError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
-  const debouncedValue = useDebounce(inputValue, 500)
+  const debouncedValue = useDebounce(searchValue, 500)
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setShowError(false)
+  }
 
   useEffect(() => {
-    getAirports(debouncedValue, 20).then((res) => {
-      console.log('res===>', res)
-      setOptions(res.airports)
-    })
-  }, [debouncedValue])
+    if (debouncedValue) {
+      getAirports(debouncedValue, Number(limit)).then(
+        (res: AxiosResponse<AirportCodeAPIResponse>) => {
+          if (res.data.status === true && res.data.airports) {
+            setOptions(res.data.airports)
+          } else {
+            setOptions([])
+            if (res.data.status === false && res.data.message) {
+              setShowError(true)
+              setErrorMessage(res.data.message)
+            } else {
+              setShowError(true)
+              setErrorMessage(`Couldn't find airports`)
+            }
+          }
+        },
+      )
+    }
+  }, [debouncedValue, limit])
 
   return (
     <CustomFormGroup>
@@ -63,8 +102,12 @@ const Search = ({
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue)
+          if (event && event.type !== 'click') {
+            setSearchValue(newInputValue)
+          }
         }}
         options={options}
+        getOptionLabel={(option) => `${option.name}`}
         sx={{ width: matches ? 300 : '100%' }}
         renderInput={(params) => (
           <TextField {...params} label="Input airport name or 3 digit code" />
@@ -73,9 +116,20 @@ const Search = ({
       <CustomTextField
         label="Max suggestion"
         type="number"
-        defaultValue={20}
+        value={limit}
+        onChange={(event) => setLimit(event.target.value)}
         variant="outlined"
       />
+      <Snackbar
+        open={showError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={4000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </CustomFormGroup>
   )
 }

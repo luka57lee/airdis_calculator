@@ -1,11 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Typography, Container } from '@mui/material'
 import Box from '@mui/material/Box'
 import { Airport, AirportSearch } from '../../types'
 import Button from '@mui/material/Button'
 import Search from '../../components/Search'
 import { styled } from '@mui/material/styles'
-import { getDistanceInNauticalMiles } from '../../utils/geography'
+import {
+  getDistanceInNauticalMiles,
+  getZoom,
+  getCenter,
+} from '../../utils/geography'
+// import GoogleMap from '@google/maps'
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { usePrevious } from '../../hooks/previousHook'
 
 const HeaderDesc = styled('div')(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -13,28 +20,116 @@ const HeaderDesc = styled('div')(({ theme }) => ({
   },
 }))
 
+const containerStyle = {
+  width: '100%',
+  height: '400px',
+}
+
+const center = {
+  lat: -3.745,
+  lng: -38.523,
+}
+
 const Calculator = () => {
-  const [search, setSearch] = useState<AirportSearch>({
-    origin: undefined,
-    destination: undefined,
-  })
+  const [origin, setOrigin] = useState<Airport | undefined>()
+  const [destination, setDestination] = useState<Airport | undefined>()
 
   const [distance, setDistance] = useState<number>(0)
 
+  const [destinationMarker, setDestinationMarker] =
+    useState<google.maps.Marker>()
+  const [originMarker, setOriginMaker] = useState<google.maps.Marker>()
+  const [flightPath, setFlightPath] = useState<google.maps.Polyline>()
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyDfX3PQstiTI7_llOvuj3ND3twg6t5AvQg',
+  })
+
+  const [map, setMap] = useState<google.maps.Map | null>(null)
+
+  const onLoad = useCallback(function callback(mapIns: google.maps.Map) {
+    setMap(mapIns)
+  }, [])
+
+  const onUnmount = useCallback(function callback() {
+    setMap(null)
+  }, [])
+
   const selectAirPort = (key: string) => (ap: Airport) => {
-    setSearch((prev: AirportSearch) => ({
-      ...prev,
-      [key]: ap,
-    }))
+    if (map && origin === undefined && destination === undefined) {
+      map.setCenter({ lat: Number(ap.latitude), lng: Number(ap.longitude) })
+    }
+    if (key === 'origin') {
+      if (isLoaded && map) {
+        originMarker?.setMap(null)
+        const om = new google.maps.Marker({
+          position: {
+            lat: Number(ap.latitude),
+            lng: Number(ap.longitude),
+          },
+          map,
+        })
+        setOriginMaker(om)
+      }
+      setOrigin(ap)
+    } else {
+      destinationMarker?.setMap(null)
+      const dm = new google.maps.Marker({
+        position: {
+          lat: Number(ap.latitude),
+          lng: Number(ap.longitude),
+        },
+        map,
+      })
+      setDestinationMarker(dm)
+      setDestination(ap)
+    }
   }
 
   const calculate = () => {
     const dis = getDistanceInNauticalMiles(
-      search.origin as Airport,
-      search.destination as Airport,
+      origin as Airport,
+      destination as Airport,
     )
     setDistance(dis)
   }
+
+  useEffect(() => {
+    flightPath?.setMap(null)
+
+    if (isLoaded && map) {
+      if (origin && destination) {
+        const flightPlanCoordinates = [
+          {
+            lat: Number(origin.latitude),
+            lng: Number(origin.longitude),
+          },
+          {
+            lat: Number(destination.latitude),
+            lng: Number(destination.longitude),
+          },
+        ]
+        const fp = new window.google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+        })
+        setFlightPath(fp)
+        fp.setMap(map)
+
+        map.setCenter(getCenter(origin, destination))
+        map.setZoom(getZoom(origin, destination))
+      }
+    }
+
+    return () => {
+      flightPath?.setMap(null)
+    }
+    // eslint-disable-next-line
+  }, [origin, destination, isLoaded, map])
 
   return (
     <Box
@@ -68,9 +163,7 @@ const Calculator = () => {
             variant="contained"
             sx={{ marginLeft: '16px' }}
             onClick={calculate}
-            disabled={
-              search.origin === undefined || search.destination === undefined
-            }
+            disabled={origin === undefined || destination === undefined}
           >
             Calcuate
           </Button>
@@ -80,11 +173,26 @@ const Calculator = () => {
             marginLeft: '16px',
           }}
         >
-          {distance === 0 ||
-          search.origin === undefined ||
-          search.destination === undefined
+          {distance === 0 || origin === undefined || destination === undefined
             ? ''
-            : `Distance between ${search.origin?.name} and ${search.destination?.name} is ${distance}`}
+            : `Distance between ${origin?.name} and ${
+                destination?.name
+              } is ${distance.toFixed(3)} NM`}
+        </Box>
+        <Box
+          sx={{
+            marginLeft: '16px',
+          }}
+        >
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={center}
+              zoom={1}
+              onLoad={onLoad}
+              onUnmount={onUnmount}
+            />
+          )}
         </Box>
       </Container>
     </Box>
