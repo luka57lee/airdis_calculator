@@ -13,6 +13,10 @@ const defaultCenter = {
   lng: -38.523,
 }
 
+let destinationMarker: google.maps.Marker | null
+let originMarker: google.maps.Marker | null
+let flightPath: google.maps.Polyline | null
+
 const AirportMap = ({
   origin,
   destination,
@@ -20,11 +24,6 @@ const AirportMap = ({
   origin: Airport | undefined
   destination: Airport | undefined
 }) => {
-  const [destinationMarker, setDestinationMarker] =
-    useState<google.maps.Marker>()
-  const [originMarker, setOriginMaker] = useState<google.maps.Marker>()
-  const [flightPath, setFlightPath] = useState<google.maps.Polyline>()
-
   const [map, setMap] = useState<google.maps.Map | null>(null)
 
   const onLoad = useCallback(function callback(mapIns: google.maps.Map) {
@@ -49,31 +48,27 @@ const AirportMap = ({
   useEffect(() => {
     if (map && origin) {
       originMarker?.setMap(null)
-      const om = new google.maps.Marker({
+      originMarker = new google.maps.Marker({
         position: {
           lat: origin.lat,
           lng: origin.lng,
         },
         map,
       })
-      setOriginMaker(om)
     }
-    // eslint-disable-next-line
   }, [origin, map])
 
   useEffect(() => {
     if (map && destination) {
       destinationMarker?.setMap(null)
-      const dm = new google.maps.Marker({
+      destinationMarker = new google.maps.Marker({
         position: {
           lat: destination.lat,
           lng: destination.lng,
         },
         map,
       })
-      setDestinationMarker(dm)
     }
-    // eslint-disable-next-line
   }, [destination, map])
 
   useEffect(() => {
@@ -91,15 +86,14 @@ const AirportMap = ({
             lng: destination.lng,
           },
         ]
-        const fp = new window.google.maps.Polyline({
+        flightPath = new window.google.maps.Polyline({
           path: flightPlanCoordinates,
           geodesic: true,
           strokeColor: '#FF0000',
           strokeOpacity: 1.0,
           strokeWeight: 2,
         })
-        setFlightPath(fp)
-        fp.setMap(map)
+        flightPath.setMap(map)
         const center = getCenter(origin, destination)
         map.setCenter(center)
         const zoom = getZoomLevelOnGoogleMap(origin, destination)
@@ -110,7 +104,6 @@ const AirportMap = ({
     return () => {
       flightPath?.setMap(null)
     }
-    // eslint-disable-next-line
   }, [origin, destination, map])
 
   return (
