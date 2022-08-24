@@ -8,6 +8,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 I put more energy into user experience than testing (mocking google map apis, and snapshoting) in the project.
 [Searching, Google Map zooming & centering based on distance between two airports, and show markers & polyline ]
 
+I also hosted the app on Netlify. Here is the link
+
+https://voluble-gumdrop-acc4bf.netlify.app/
+
 1. Airports should be searchable by name or 3 digit code
 2. Use an autocomplete component for searching airports
 3. Use Material UI
