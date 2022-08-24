@@ -46,6 +46,7 @@ const Calculator = () => {
       sx={{
         minHeight: '100vh',
         width: '100%',
+        overflowX: 'hidden',
       }}
     >
       <Header />
