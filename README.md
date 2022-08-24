@@ -21,11 +21,6 @@ https://voluble-gumdrop-acc4bf.netlify.app/
 7. interface works well in mobile
 8. Calculation is correct.
 
-## Requirements to run the project
-
-1. Please change .env.example to .env
-2. Make sure to put correct env variables
-
 ## Available Scripts
 
 In the project directory, you can run:
