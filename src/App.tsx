@@ -1,6 +1,5 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import './App.css'
 import Calculator from './pages/Calculator'
 
 const defaultTheme = createTheme() // or your custom theme
