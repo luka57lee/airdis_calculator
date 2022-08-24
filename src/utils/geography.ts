@@ -60,7 +60,7 @@ export function getZoomLevelOnGoogleMap(
   return i
 }
 
-function getMeanPoint(coords: Point[]): Point {
+export function getMeanPoint(coords: Point[]): Point {
   if (coords.length === 1) {
     return coords[0]
   }
@@ -88,10 +88,12 @@ function getMeanPoint(coords: Point[]): Point {
   const centralSquareRoot = Math.sqrt(x * x + y * y)
   const centralLatitude = Math.atan2(z, centralSquareRoot)
 
-  return {
+  const mean = {
     lat: (centralLatitude * 180) / Math.PI,
     lng: (centralLongitude * 180) / Math.PI,
   }
+
+  return mean
 }
 
 export function getCenter(origin: Airport, destination: Airport): Point {

@@ -22,10 +22,12 @@ const Calculator = () => {
 
   const handleOrigin = (ap: AirportReactState) => {
     setOrigin(ap)
+    setDistance(0)
   }
 
   const handleDestination = (ap: AirportReactState) => {
     setDestination(ap)
+    setDistance(0)
   }
 
   const calculate = () => {
@@ -33,6 +35,7 @@ const Calculator = () => {
       origin as Airport,
       destination as Airport,
     )
+
     setDistance(dis)
   }
 

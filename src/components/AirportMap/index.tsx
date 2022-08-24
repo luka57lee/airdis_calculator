@@ -97,10 +97,9 @@ const AirportMap = ({
         })
         flightPath.setMap(map)
         const center = getCenter(origin, destination)
-
-        map.setCenter(center)
+        map?.setCenter(center)
         const zoom = getZoomLevelOnGoogleMap(origin, destination)
-        map.setZoom(zoom)
+        map?.setZoom(zoom)
       }
     }
 

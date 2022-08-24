@@ -22,7 +22,7 @@ export type Point = {
 
 export type Airport = Point & {
   name: string
-  idata: string
+  idata: string | undefined
 }
 
 export type AirportReactState = Airport | null

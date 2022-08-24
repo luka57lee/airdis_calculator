@@ -3,5 +3,5 @@ import App from './App'
 
 test('renders App name', () => {
   render(<App />)
-  expect(screen.getByText('Address Book')).toBeInTheDocument()
+  expect(screen.getByText('Airport distance calculator')).toBeInTheDocument()
 })
