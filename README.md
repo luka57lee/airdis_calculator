@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### Things implemented
 
 I put more energy into user experience than testing (mocking google map apis, and snapshoting) in the project.
-[Searching, Google Map zooming & centering based on distance between two airports, and show markers & polyline ]
+Searching, Google Map zooming & centering based on distance between two airports, and show markers & polyline
 
 I also hosted the app on Netlify. Here is the link
 
