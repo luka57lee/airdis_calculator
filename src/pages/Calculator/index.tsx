@@ -9,13 +9,15 @@ import AirportMap from '../../components/AirportMap'
 import { useJsApiLoader } from '@react-google-maps/api'
 import Header from '../../components/Header'
 
+const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY
+
 const Calculator = () => {
   const [origin, setOrigin] = useState<AirportReactState>(null)
   const [destination, setDestination] = useState<AirportReactState>(null)
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyDfX3PQstiTI7_llOvuj3ND3twg6t5AvQg',
+    googleMapsApiKey: googleMapsApiKey || '',
   })
 
   const [distance, setDistance] = useState<number>(0)
