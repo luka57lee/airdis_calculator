@@ -66,20 +66,16 @@ const Calculator = () => {
           sx={{
             minHeight: '60px',
             width: '100%',
-            margin: '16px',
+            margin: '16px 32px',
           }}
         >
-          {distance === 0 || !origin || !destination ? null : (
-            <>
-              Distance between <b>{origin?.name}</b> and &nbsp;
-              <b>{destination?.name}</b> is <b>{distance.toFixed(3)}</b> &nbsp;
-              <b>NM</b>
-            </>
+          {distance > 0 && origin && destination && (
+            <span>Distance is {distance.toFixed(3)} NM</span>
           )}
         </Box>
         <Box
           sx={{
-            marginLeft: '16px',
+            marginLeft: '32px',
           }}
         >
           {isLoaded && <AirportMap origin={origin} destination={destination} />}
