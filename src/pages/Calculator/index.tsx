@@ -24,12 +24,12 @@ const Calculator = () => {
 
   const handleOrigin = (ap: AirportReactState) => {
     setOrigin(ap)
-    setDistance(0)
+    setDistance(-1)
   }
 
   const handleDestination = (ap: AirportReactState) => {
     setDestination(ap)
-    setDistance(0)
+    setDistance(-1)
   }
 
   const calculate = () => {
@@ -37,7 +37,6 @@ const Calculator = () => {
       origin as Airport,
       destination as Airport,
     )
-
     setDistance(dis)
   }
 
@@ -70,7 +69,7 @@ const Calculator = () => {
             margin: '16px 32px',
           }}
         >
-          {distance > 0 && origin && destination && (
+          {distance >= 0 && origin && destination && (
             <span>The distance is {distance.toFixed(2)} nautical miles.</span>
           )}
         </Box>
