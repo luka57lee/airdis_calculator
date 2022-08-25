@@ -50,12 +50,11 @@ const Calculator = () => {
     >
       <Header />
       <Container maxWidth="xl" sx={{ margin: '24px auto' }}>
-        <Box sx={{ margin: '16px' }}>
+        <Box>
           <Search title="Origin" onSelect={handleOrigin} />
           <Search title="Destination" onSelect={handleDestination} />
           <Button
             variant="contained"
-            sx={{ marginLeft: '16px' }}
             onClick={calculate}
             disabled={!origin || !destination}
           >
@@ -64,20 +63,15 @@ const Calculator = () => {
         </Box>
         <Box
           sx={{
-            minHeight: '60px',
-            width: '100%',
-            margin: '16px 32px',
+            minHeight: '20px',
+            margin: '8px 0px',
           }}
         >
           {distance >= 0 && origin && destination && (
             <span>The distance is {distance.toFixed(2)} nautical miles.</span>
           )}
         </Box>
-        <Box
-          sx={{
-            marginLeft: '32px',
-          }}
-        >
+        <Box>
           {isLoaded && <AirportMap origin={origin} destination={destination} />}
         </Box>
       </Container>

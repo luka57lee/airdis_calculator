@@ -22,10 +22,14 @@ import { AxiosResponse } from 'axios'
 
 const CustomFormGroup = styled(FormGroup)(({ theme }) => ({
   gap: '16px',
-  margin: '16px',
+  marginBottom: '16px',
   flexWrap: 'nowrap',
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row',
+  },
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(1),
+    gap: theme.spacing(1),
   },
 }))
 

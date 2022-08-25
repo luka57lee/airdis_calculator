@@ -10,10 +10,10 @@ export const getAirports = (
   const formData = new FormData()
 
   search = search.toLocaleLowerCase()
-  if (search.endsWith('international airport')) {
+  if (search.length !== 21 && search.endsWith('international airport')) {
     search = search.substring(0, search.length - 21)
   }
-  if (search.endsWith('airport')) {
+  if (search.length !== 7 && search.endsWith('airport')) {
     search = search.substring(0, search.length - 7)
   }
   formData.append('term', search)
