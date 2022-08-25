@@ -1,20 +1,13 @@
 import { styled } from '@mui/material/styles'
-import { Typography, Container } from '@mui/material'
+import { Container } from '@mui/material'
 import Box from '@mui/material/Box'
 
 const HeaderTitle = styled('span')(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     fontSize: '21px',
-    lineHeight: '50px',
   },
   [theme.breakpoints.down(320)]: {
     fontSize: '14px',
-    lineHeight: '50px',
-  },
-}))
-const HeaderDesc = styled('div')(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    display: 'none',
   },
 }))
 
@@ -28,13 +21,12 @@ const Header = () => {
         borderBottom: '1px solid black',
         fontSize: '20px',
         fontWeight: 500,
+        alignItems: 'center',
+        display: 'flex',
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ padding: { xs: '4px' } }}>
         <HeaderTitle>Airport distance calculator</HeaderTitle>
-        <HeaderDesc>
-          <Typography>calculate distance between two airports</Typography>
-        </HeaderDesc>
       </Container>
     </Box>
   )

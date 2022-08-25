@@ -1,7 +1,6 @@
 import { AirportReactState } from '../../types'
 import { GoogleMap } from '@react-google-maps/api'
 import { useEffect, useState, useCallback } from 'react'
-import { getZoomLevelOnGoogleMap, getCenter } from '../../utils/geography'
 
 const containerStyle = {
   width: '100%',
@@ -78,28 +77,30 @@ const AirportMap = ({
       flightPath?.setMap(null)
 
       if (origin && destination) {
-        const flightPlanCoordinates = [
-          {
-            lat: origin.lat,
-            lng: origin.lng,
-          },
-          {
-            lat: destination.lat,
-            lng: destination.lng,
-          },
-        ]
+        const originCord = {
+          lat: origin.lat,
+          lng: origin.lng,
+        }
+
+        const destCord = {
+          lat: destination.lat,
+          lng: destination.lng,
+        }
+
+        const flightPlanCoordinates = [originCord, destCord]
         flightPath = new window.google.maps.Polyline({
           path: flightPlanCoordinates,
-          geodesic: true,
+          geodesic: false,
           strokeColor: '#FF0000',
           strokeOpacity: 1.0,
           strokeWeight: 2,
         })
         flightPath.setMap(map)
-        const center = getCenter(origin, destination)
-        map?.setCenter(center)
-        const zoom = getZoomLevelOnGoogleMap(origin, destination)
-        map?.setZoom(zoom)
+        const latlngbounds = new google.maps.LatLngBounds()
+        latlngbounds.extend(originCord)
+        latlngbounds.extend(destCord)
+        map?.setCenter(latlngbounds.getCenter())
+        map?.fitBounds(latlngbounds)
       }
     }
 

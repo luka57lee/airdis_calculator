@@ -71,7 +71,7 @@ const Calculator = () => {
           }}
         >
           {distance > 0 && origin && destination && (
-            <span>Distance is {distance.toFixed(3)} NM</span>
+            <span>The distance is {distance.toFixed(2)} nautical miles.</span>
           )}
         </Box>
         <Box

@@ -54,7 +54,7 @@ const Search = ({
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
-  const debouncedValue = useDebounce(searchValue, 500)
+  const debouncedValue = useDebounce(searchValue, 1000)
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,

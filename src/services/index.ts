@@ -8,6 +8,14 @@ export const getAirports = (
   search: string,
 ): Promise<AxiosResponse<AirportCodeAPIResponse>> => {
   const formData = new FormData()
+
+  search = search.toLocaleLowerCase()
+  if (search.endsWith('international airport')) {
+    search = search.substring(0, search.length - 21)
+  }
+  if (search.endsWith('airport')) {
+    search = search.substring(0, search.length - 7)
+  }
   formData.append('term', search)
 
   return axios.post(airportCodesAPI, formData, {
