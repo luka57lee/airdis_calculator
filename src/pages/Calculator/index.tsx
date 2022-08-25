@@ -63,7 +63,7 @@ const Calculator = () => {
         </Box>
         <Box
           sx={{
-            minHeight: '20px',
+            minHeight: '24px',
             margin: '8px 0px',
           }}
         >
