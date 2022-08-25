@@ -60,7 +60,7 @@ const Calculator = () => {
             onClick={calculate}
             disabled={!origin || !destination}
           >
-            Calcuate
+            Calculate
           </Button>
         </Box>
         <Box
